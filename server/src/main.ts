@@ -31,7 +31,7 @@ app.use(bodyParser.json());
 app.use("/api/forms", formRoutes);
 
 app.get("/", (_req, res) => {
-  res.send("RF Dynamic Form Builder");
+  res.send("RF Dynamic Form Builder BE");
 });
 
 app.listen(PORT, () => {
