@@ -1,6 +1,6 @@
 # RF Dynamic Form Builder
 
-This repository contains a full stack Dynamic Form Builder application with a MERN stack.
+This repository contains a full stack Dynamic Form Builder application with the MERN stack.
 
 ## Project Structure
 
@@ -50,7 +50,7 @@ Located in the `./server` directory.
 Before running the backend, create a `.env` file in the `./server` directory with the following content:
 
 ```
-PORT=5000
+PORT=3000
 MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.t3qzwht.mongodb.net/<database-name>?retryWrites=true&w=majority&appName=cluster0
 ```
 
