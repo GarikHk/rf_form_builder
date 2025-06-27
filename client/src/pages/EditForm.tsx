@@ -12,22 +12,21 @@ import {
   Divider,
 } from "@mui/material";
 import { ArrowUpward, ArrowDownward, Edit, Delete } from "@mui/icons-material";
-import { useDispatch } from "react-redux";
 import type { FormField } from "../interfaces";
-import {
-  addField,
-  removeField,
-  reorderField,
-  setTitle,
-  updateField,
-} from "../store/form.slice";
 import { AddEditFieldModal } from "../components/AddEditFieldModal";
 import { buildEmptyFormField } from "../helpers";
 import { useForm } from "../hooks";
 
 export const EditForm: React.FC = () => {
-  const dispatch = useDispatch();
-  const { title, fields } = useForm();
+  const {
+    title,
+    fields,
+    addFormField,
+    updateFormField,
+    updateFormTitle,
+    removeFormField,
+    reorderFormField,
+  } = useForm();
 
   const [editingField, setEditingField] = useState<FormField>(
     buildEmptyFormField()
@@ -35,25 +34,17 @@ export const EditForm: React.FC = () => {
   const [openToEdit, setOpenToEdit] = useState(false);
   const [openToAdd, setOpenToAdd] = useState(false);
 
-  const handleAddField = (field: FormField) => {
-    dispatch(addField(field));
-  };
-
-  const handleEditField = (field: FormField) => {
-    dispatch(updateField(field));
-  };
-
-  const handleClickEdit = (field: FormField) => {
+  function handleClickEdit(field: FormField): void {
     setEditingField(field);
     setOpenToEdit(true);
-  };
+  }
 
   return (
     <Box sx={{ mx: "auto", p: 3 }}>
       <TextField
         label="Form Name"
         value={title}
-        onChange={(e) => dispatch(setTitle(e.target.value))}
+        onChange={(e) => updateFormTitle(e.target.value)}
         fullWidth
         sx={{ mb: 2 }}
         variant="standard"
@@ -78,7 +69,7 @@ export const EditForm: React.FC = () => {
                   <IconButton
                     edge="end"
                     aria-label="delete"
-                    onClick={() => dispatch(removeField(field.id))}
+                    onClick={() => removeFormField(field.id)}
                     sx={{ ml: 1 }}
                   >
                     <Delete />
@@ -87,9 +78,7 @@ export const EditForm: React.FC = () => {
                     edge="end"
                     aria-label="move up"
                     onClick={() =>
-                      dispatch(
-                        reorderField({ fromIndex: idx, toIndex: idx - 1 })
-                      )
+                      reorderFormField({ fromIndex: idx, toIndex: idx - 1 })
                     }
                     disabled={idx === 0}
                     sx={{ ml: 1 }}
@@ -100,9 +89,7 @@ export const EditForm: React.FC = () => {
                     edge="end"
                     aria-label="move down"
                     onClick={() =>
-                      dispatch(
-                        reorderField({ fromIndex: idx, toIndex: idx + 1 })
-                      )
+                      reorderFormField({ fromIndex: idx, toIndex: idx + 1 })
                     }
                     disabled={idx === fields.length - 1}
                     sx={{ ml: 1 }}
@@ -115,8 +102,7 @@ export const EditForm: React.FC = () => {
               <ListItemText
                 primary={
                   <>
-                    <strong>{field.label || "(No label)"}</strong> [{field.type}
-                    ]
+                    <strong>{field.label || "(No label)"}</strong> [{field.type}]
                     {field.required && <span style={{ color: "red" }}> *</span>}
                   </>
                 }
@@ -138,29 +124,25 @@ export const EditForm: React.FC = () => {
         Add Field
       </Button>
 
-      {/* Add or Edit Field Modal */}
-      {/* {openToAdd && ( */}
       <AddEditFieldModal
         title="Add a New Field"
         open={openToAdd}
         initialField={buildEmptyFormField()}
         onClose={() => setOpenToAdd(false)}
-        onSave={handleAddField}
+        onSave={addFormField}
       />
-      {/* )} */}
 
       <AddEditFieldModal
         title="Edit Field"
         open={openToEdit}
         initialField={editingField}
         onClose={() => setOpenToEdit(false)}
-        onSave={handleEditField}
+        onSave={updateFormField}
       />
 
       <Divider sx={{ my: 2 }} />
       <Button
         variant="contained"
-        color="primary"
         disabled={!title || fields.length === 0}
         onClick={() => {
           // Save logic here

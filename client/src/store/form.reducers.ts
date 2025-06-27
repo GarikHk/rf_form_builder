@@ -1,5 +1,5 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { FormField, FormState } from "../interfaces";
+import type { FormField, FormState, ReloadPayload } from "../interfaces";
 
 export function setFormTitle(state: FormState, action: PayloadAction<string>) {
   state.title = action.payload;
@@ -34,7 +34,7 @@ export function removeFormField(
 
 export function reorderFormField(
   state: FormState,
-  action: PayloadAction<{ fromIndex: number; toIndex: number }>
+  action: PayloadAction<ReloadPayload>
 ) {
   const { fromIndex, toIndex } = action.payload;
   const [movedField] = state.fields.splice(fromIndex, 1);
