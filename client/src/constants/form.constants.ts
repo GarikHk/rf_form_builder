@@ -4,3 +4,5 @@ export enum FormFieldType {
   Checkbox = "checkbox",
   Select = "select",
 }
+
+export const SERVER_URL = "http://localhost:3000";

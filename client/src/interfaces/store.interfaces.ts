@@ -1,10 +1,11 @@
 import type { FormField } from "./form.interfaces";
 
-export interface RootState {
-  form: FormState;
+export interface FormState {
+  form: Form;
 }
 
-export interface FormState {
+export interface Form {
+  _id: string;
   title: string;
   fields: FormField[];
 }
@@ -15,6 +16,7 @@ export interface ReloadPayload {
 }
 
 export interface UseForm {
+  id: string;
   title: string;
   fields: FormField[];
   addFormField: (payload: FormField) => void;
@@ -22,4 +24,5 @@ export interface UseForm {
   updateFormTitle: (payload: string) => void;
   removeFormField: (payload: string) => void;
   reorderFormField: (payload: ReloadPayload) => void;
+  setFormId: (payload: string) => void;
 }

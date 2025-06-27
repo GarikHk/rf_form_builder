@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
-import { Alert, Button, Snackbar, Typography } from "@mui/material";
-import { PreviewFields } from "../components/PreviewFields";
+import { Button, Typography } from "@mui/material";
+import { PreviewFields, ToastMessage } from "../components";
 import { useForm } from "../hooks";
 import { isFieldEmpty } from "../helpers";
 
@@ -48,14 +48,13 @@ export const PreviewForm: React.FC = () => {
           </Box>
         </Box>
       )}
-      <Snackbar
+      <ToastMessage
         open={open}
-        autoHideDuration={5000}
+        message="Please fill in all required fields."
+        duration={5000}
+        severity="error"
         onClose={handleClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert severity="error">Please fill in all required fields.</Alert>
-      </Snackbar>
+      />
     </Box>
   );
 };

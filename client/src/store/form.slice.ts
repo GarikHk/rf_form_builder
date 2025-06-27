@@ -1,14 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { FormState } from "../interfaces";
+import type { Form } from "../interfaces";
 import {
   addFormField,
   removeFormField,
   reorderFormField,
+  setFormId,
   setFormTitle,
   updateFormField,
 } from "./form.reducers";
 
-const initialState: FormState = {
+const initialState: Form = {
+  _id: "",
   title: "",
   fields: [],
 };
@@ -22,8 +24,15 @@ export const formSlice = createSlice({
     updateField: updateFormField,
     removeField: removeFormField,
     reorderField: reorderFormField,
+    setId: setFormId,
   },
 });
 
-export const { setTitle, addField, updateField, removeField, reorderField } =
-  formSlice.actions;
+export const {
+  setTitle,
+  addField,
+  updateField,
+  removeField,
+  reorderField,
+  setId,
+} = formSlice.actions;

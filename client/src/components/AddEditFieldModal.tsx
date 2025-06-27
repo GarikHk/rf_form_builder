@@ -38,14 +38,14 @@ export const AddEditFieldModal: React.FC<AddEditFieldModalProps> = (props) => {
     }));
   }, [options]);
 
-  const handleClose = () => {
+  function handleClose(): void {
     onClose();
-  };
+  }
 
-  const handleSave = () => {
+  function handleSave(): void {
     onSave(editingField);
     onClose();
-  };
+  }
 
   return (
     <Dialog key={editingField.id} onClose={handleClose} open={open}>

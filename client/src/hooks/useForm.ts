@@ -1,7 +1,7 @@
 import type {
   FormField,
   ReloadPayload,
-  RootState,
+  FormState,
   UseForm,
 } from "../interfaces";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +9,7 @@ import {
   addField,
   removeField,
   reorderField,
+  setId,
   setTitle,
   updateField,
 } from "../store/form.slice";
@@ -16,8 +17,9 @@ import { useCallback } from "react";
 
 export function useForm(): UseForm {
   const dispatch = useDispatch();
-  const title = useSelector((state: RootState) => state.form.title);
-  const fields = useSelector((state: RootState) => state.form.fields);
+  const id = useSelector((state: FormState) => state.form._id);
+  const title = useSelector((state: FormState) => state.form.title);
+  const fields = useSelector((state: FormState) => state.form.fields);
 
   const addFormField = useCallback(
     (payload: FormField) => {
@@ -54,7 +56,15 @@ export function useForm(): UseForm {
     [dispatch]
   );
 
+  const setFormId = useCallback(
+    (payload: string) => {
+      dispatch(setId(payload));
+    },
+    [dispatch]
+  );
+
   return {
+    id,
     title,
     fields,
     addFormField,
@@ -62,5 +72,6 @@ export function useForm(): UseForm {
     updateFormTitle,
     removeFormField,
     reorderFormField,
+    setFormId,
   };
 }

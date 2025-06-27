@@ -1,21 +1,15 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { FormField, FormState, ReloadPayload } from "../interfaces";
+import type { FormField, Form, ReloadPayload } from "../interfaces";
 
-export function setFormTitle(state: FormState, action: PayloadAction<string>) {
+export function setFormTitle(state: Form, action: PayloadAction<string>) {
   state.title = action.payload;
 }
 
-export function addFormField(
-  state: FormState,
-  action: PayloadAction<FormField>
-) {
+export function addFormField(state: Form, action: PayloadAction<FormField>) {
   state.fields.push(action.payload);
 }
 
-export function updateFormField(
-  state: FormState,
-  action: PayloadAction<FormField>
-) {
+export function updateFormField(state: Form, action: PayloadAction<FormField>) {
   const index = state.fields.findIndex(
     (field) => field.id === action.payload.id
   );
@@ -25,18 +19,19 @@ export function updateFormField(
   }
 }
 
-export function removeFormField(
-  state: FormState,
-  action: PayloadAction<string>
-) {
+export function removeFormField(state: Form, action: PayloadAction<string>) {
   state.fields = state.fields.filter((field) => field.id !== action.payload);
 }
 
 export function reorderFormField(
-  state: FormState,
+  state: Form,
   action: PayloadAction<ReloadPayload>
 ) {
   const { fromIndex, toIndex } = action.payload;
   const [movedField] = state.fields.splice(fromIndex, 1);
   state.fields.splice(toIndex, 0, movedField);
+}
+
+export function setFormId(state: Form, action: PayloadAction<string>) {
+  state._id = action.payload;
 }

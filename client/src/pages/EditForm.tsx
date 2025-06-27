@@ -13,12 +13,13 @@ import {
 } from "@mui/material";
 import { ArrowUpward, ArrowDownward, Edit, Delete } from "@mui/icons-material";
 import type { FormField } from "../interfaces";
-import { AddEditFieldModal } from "../components/AddEditFieldModal";
-import { buildEmptyFormField } from "../helpers";
+import { AddEditFieldModal, ToastMessage } from "../components";
+import { buildEmptyFormField, saveForm } from "../helpers";
 import { useForm } from "../hooks";
 
 export const EditForm: React.FC = () => {
   const {
+    id,
     title,
     fields,
     addFormField,
@@ -26,6 +27,7 @@ export const EditForm: React.FC = () => {
     updateFormTitle,
     removeFormField,
     reorderFormField,
+    setFormId,
   } = useForm();
 
   const [editingField, setEditingField] = useState<FormField>(
@@ -33,10 +35,29 @@ export const EditForm: React.FC = () => {
   );
   const [openToEdit, setOpenToEdit] = useState(false);
   const [openToAdd, setOpenToAdd] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   function handleClickEdit(field: FormField): void {
     setEditingField(field);
     setOpenToEdit(true);
+  }
+
+  function handleFormSave(): void {
+    saveForm({
+      _id: id,
+      title,
+      fields,
+    }).then(({ form }) => {
+      setOpenModal(true);
+
+      if (id !== form._id) {
+        setFormId(form._id);
+      }
+    });
+  }
+
+  function handleClose(): void {
+    setOpenModal(false);
   }
 
   return (
@@ -102,7 +123,8 @@ export const EditForm: React.FC = () => {
               <ListItemText
                 primary={
                   <>
-                    <strong>{field.label || "(No label)"}</strong> [{field.type}]
+                    <strong>{field.label || "(No label)"}</strong> [{field.type}
+                    ]
                     {field.required && <span style={{ color: "red" }}> *</span>}
                   </>
                 }
@@ -144,16 +166,18 @@ export const EditForm: React.FC = () => {
       <Button
         variant="contained"
         disabled={!title || fields.length === 0}
-        onClick={() => {
-          // Save logic here
-          alert(
-            "Form saved!\n" +
-              JSON.stringify({ formName: title, fields }, null, 2)
-          );
-        }}
+        onClick={handleFormSave}
       >
         Save Form
       </Button>
+
+      <ToastMessage
+        open={openModal}
+        message="The form was successfully saved!"
+        duration={5000}
+        severity="success"
+        onClose={handleClose}
+      />
     </Box>
   );
 };
