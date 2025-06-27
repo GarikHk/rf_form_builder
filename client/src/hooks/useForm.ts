@@ -1,11 +1,10 @@
-import { useDispatch } from "react-redux/dist/react-redux";
 import type {
   FormField,
   ReloadPayload,
   RootState,
   UseForm,
 } from "../interfaces";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   addField,
   removeField,
