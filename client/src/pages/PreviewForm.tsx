@@ -1,24 +1,57 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
-import { Button, Typography } from "@mui/material";
-import { PreviewFields, ToastMessage } from "../components";
+import { Button, Stack, Typography } from "@mui/material";
+import { PreviewField, ToastMessage } from "../components";
 import { useForm } from "../hooks";
-import { isFieldEmpty } from "../helpers";
+import type { ToastMessageState } from "../interfaces";
 
 export const PreviewForm: React.FC = () => {
   const { title, fields } = useForm();
   const [open, setOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState<ToastMessageState>({
+    message: "",
+    severity: "info",
+  });
+  const [formGroup, setFormGroup] = useState<
+    Record<string, string | number | boolean>
+  >(
+    fields.reduce<Record<string, string | number | boolean>>((acc, field) => {
+      acc[field.label] = field.value;
+      return acc;
+    }, {})
+  );
+
+  function onFieldValueChange(
+    label: string,
+    value: string | number | boolean
+  ): void {
+    setFormGroup((prev) => ({
+      ...prev,
+      [label]: value,
+    }));
+  }
 
   function handleSubmit(e: React.SyntheticEvent | Event): void {
     e.preventDefault();
 
     const invalid = fields.some(
-      (field) => field.required && isFieldEmpty(field)
+      (field) => field.required && !formGroup[field.label]
     );
 
     if (invalid) {
-      setOpen(true);
+      setToastMessage({
+        message: "Please fill in all required fields.",
+        severity: "error",
+      });
+    } else {
+      setToastMessage({
+        message: "The form was successfully submitted.",
+        severity: "success",
+      });
     }
+
+    console.log("Submitted values:", formGroup);
+    setOpen(true);
   }
 
   function handleClose(): void {
@@ -39,7 +72,17 @@ export const PreviewForm: React.FC = () => {
             {title}
           </Typography>
           <Box component="form" onSubmit={handleSubmit}>
-            <PreviewFields fields={fields} />
+            <Stack spacing={2}>
+              {fields.map((field) => (
+                <Box key={field.id}>
+                  <PreviewField
+                    field={field}
+                    formGroup={formGroup}
+                    onFieldValueChange={onFieldValueChange}
+                  />
+                </Box>
+              ))}
+            </Stack>
             <Box mt={2}>
               <Button type="submit" variant="contained">
                 Submit
@@ -50,9 +93,9 @@ export const PreviewForm: React.FC = () => {
       )}
       <ToastMessage
         open={open}
-        message="Please fill in all required fields."
+        message={toastMessage.message}
         duration={5000}
-        severity="error"
+        severity={toastMessage.severity}
         onClose={handleClose}
       />
     </Box>

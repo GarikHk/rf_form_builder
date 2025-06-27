@@ -10,8 +10,16 @@ export interface AddEditFieldModalProps {
   initialField: FormField;
 }
 
-export interface PreviewFieldsProps {
-  fields: FormField[];
+export interface ImportFormProps {
+  open: boolean;
+  onClose: () => void;
+  onImport: (toastMessage: ToastMessageState) => void;
+}
+
+export interface PreviewFieldProps {
+  field: FormField;
+  formGroup: Record<string, string | number | boolean>;
+  onFieldValueChange: (key: string, value: string | number | boolean) => void;
 }
 
 export interface ToastMessageProps {
@@ -22,7 +30,17 @@ export interface ToastMessageProps {
   onClose: () => void;
 }
 
+export interface ToastMessageState {
+  message: string;
+  severity: AlertColor;
+}
+
 export interface FormSaveResponse {
   message: string;
   form: Form;
+}
+
+export interface ImportFormResponse {
+  message: string;
+  form: Form | null;
 }

@@ -3,12 +3,14 @@ import type {
   ReloadPayload,
   FormState,
   UseForm,
+  Form,
 } from "../interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addField,
   removeField,
   reorderField,
+  setForm,
   setId,
   setTitle,
   updateField,
@@ -66,6 +68,13 @@ export function useForm(): UseForm {
     [dispatch]
   );
 
+  const initForm = useCallback(
+    (payload: Form) => {
+      dispatch(setForm(payload));
+    },
+    [dispatch]
+  );
+
   return {
     id,
     title,
@@ -76,5 +85,6 @@ export function useForm(): UseForm {
     removeFormField,
     reorderFormField,
     setFormId,
+    initForm,
   };
 }

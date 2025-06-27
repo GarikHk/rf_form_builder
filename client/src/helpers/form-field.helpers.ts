@@ -1,5 +1,10 @@
 import { FormFieldType, SERVER_URL } from "../constants";
-import type { Form, FormField, FormSaveResponse } from "../interfaces";
+import type {
+  Form,
+  FormField,
+  FormSaveResponse,
+  ImportFormResponse,
+} from "../interfaces";
 import axios from "axios";
 
 /**
@@ -15,24 +20,6 @@ export function buildEmptyFormField(): FormField {
     required: false,
     value: "",
   };
-}
-
-/**
- * @desc Check if a form field is empty.
- */
-export function isFieldEmpty(field: FormField): boolean {
-  return !field.value || field.value === "";
-}
-
-/**
- * @desc Extract the form by the given ID.
- */
-export function getFormFieldById(
-  fields: FormField[],
-  id: string | null
-): FormField | undefined {
-  if (!id) return undefined;
-  return fields.find((field) => field.id === id);
 }
 
 /**
@@ -57,6 +44,24 @@ export async function saveForm(form: Form): Promise<FormSaveResponse> {
     return {
       message: "Failed to save",
       form,
+    };
+  }
+}
+
+/**
+ * @desc Get the form by ID from the DB.
+ */
+export async function getFormById(id: string): Promise<ImportFormResponse> {
+  try {
+    const response = await axios.get<ImportFormResponse>(
+      getFullPath(`api/forms/${id}`)
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Get form error:", error);
+    return {
+      message: "Couldn't fetch the form",
+      form: null,
     };
   }
 }

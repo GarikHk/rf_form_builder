@@ -54,6 +54,7 @@ export const AddEditFieldModal: React.FC<AddEditFieldModalProps> = (props) => {
         <Stack spacing={2} sx={{ minWidth: "400px", p: 2, mb: 2 }}>
           {/* ○ Field label (text) */}
           <TextField
+            name="label"
             label="Label"
             value={editingField.label}
             onChange={(e) =>
@@ -65,6 +66,7 @@ export const AddEditFieldModal: React.FC<AddEditFieldModalProps> = (props) => {
           <FormControl fullWidth>
             <InputLabel>Type</InputLabel>
             <Select
+              name="type"
               value={editingField.type}
               label="Type"
               onChange={(e) =>
@@ -83,6 +85,7 @@ export const AddEditFieldModal: React.FC<AddEditFieldModalProps> = (props) => {
           {/* ○ Options list (only for select fields) */}
           {editingField.type === FormFieldType.Select && (
             <TextField
+              name="options"
               label="Options (comma separated)"
               value={options}
               onChange={(e) => setOptions(e.target.value)}
@@ -93,6 +96,7 @@ export const AddEditFieldModal: React.FC<AddEditFieldModalProps> = (props) => {
           <FormControlLabel
             control={
               <Checkbox
+                name="required"
                 checked={editingField.required}
                 onChange={(e) =>
                   setEditingField((prev) => ({
@@ -112,6 +116,7 @@ export const AddEditFieldModal: React.FC<AddEditFieldModalProps> = (props) => {
             {/* Default for text */}
             {editingField.type === FormFieldType.Text && (
               <TextField
+                name={editingField.label}
                 label={editingField.label}
                 value={editingField.value}
                 onChange={(e) =>
@@ -127,6 +132,7 @@ export const AddEditFieldModal: React.FC<AddEditFieldModalProps> = (props) => {
             {/* Default for number */}
             {editingField.type === FormFieldType.Number && (
               <TextField
+                name={editingField.label}
                 label={editingField.label}
                 value={editingField.value}
                 type="number"
@@ -148,6 +154,7 @@ export const AddEditFieldModal: React.FC<AddEditFieldModalProps> = (props) => {
                   {editingField.required && "*"}
                 </InputLabel>
                 <Select
+                  name={editingField.label}
                   value={editingField.value}
                   label="Default Option"
                   onChange={(e) =>
@@ -171,6 +178,7 @@ export const AddEditFieldModal: React.FC<AddEditFieldModalProps> = (props) => {
               <FormControlLabel
                 control={
                   <Checkbox
+                    name={editingField.label}
                     checked={editingField.value as boolean}
                     onChange={(e) =>
                       setEditingField((prev) => ({

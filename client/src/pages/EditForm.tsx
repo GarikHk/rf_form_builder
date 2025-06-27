@@ -12,8 +12,12 @@ import {
   Divider,
 } from "@mui/material";
 import { ArrowUpward, ArrowDownward, Edit, Delete } from "@mui/icons-material";
-import type { FormField } from "../interfaces";
-import { AddEditFieldModal, ToastMessage } from "../components";
+import type { FormField, ToastMessageState } from "../interfaces";
+import {
+  AddEditFieldModal,
+  ImportFormModal,
+  ToastMessage,
+} from "../components";
 import { buildEmptyFormField, saveForm } from "../helpers";
 import { useForm } from "../hooks";
 
@@ -36,6 +40,11 @@ export const EditForm: React.FC = () => {
   const [openToEdit, setOpenToEdit] = useState(false);
   const [openToAdd, setOpenToAdd] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [openImportModal, setOpenImportModal] = useState(false);
+  const [toastMessage, setToastMessage] = useState<ToastMessageState>({
+    message: "",
+    severity: "info",
+  });
 
   function handleClickEdit(field: FormField): void {
     setEditingField(field);
@@ -49,6 +58,10 @@ export const EditForm: React.FC = () => {
       fields,
     }).then(({ form }) => {
       setOpenModal(true);
+      setToastMessage({
+        message: "The form was successfully saved!",
+        severity: "success",
+      });
 
       if (id !== form._id) {
         setFormId(form._id);
@@ -58,6 +71,7 @@ export const EditForm: React.FC = () => {
 
   function handleClose(): void {
     setOpenModal(false);
+    setToastMessage({ message: "", severity: "info" });
   }
 
   return (
@@ -82,21 +96,6 @@ export const EditForm: React.FC = () => {
                 <>
                   <IconButton
                     edge="end"
-                    aria-label="edit"
-                    onClick={() => handleClickEdit(field)}
-                  >
-                    <Edit />
-                  </IconButton>
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => removeFormField(field.id)}
-                    sx={{ ml: 1 }}
-                  >
-                    <Delete />
-                  </IconButton>
-                  <IconButton
-                    edge="end"
                     aria-label="move up"
                     onClick={() =>
                       reorderFormField({ fromIndex: idx, toIndex: idx - 1 })
@@ -116,6 +115,21 @@ export const EditForm: React.FC = () => {
                     sx={{ ml: 1 }}
                   >
                     <ArrowDownward />
+                  </IconButton>
+                  <IconButton
+                    edge="end"
+                    aria-label="edit"
+                    onClick={() => handleClickEdit(field)}
+                  >
+                    <Edit />
+                  </IconButton>
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    onClick={() => removeFormField(field.id)}
+                    sx={{ ml: 1 }}
+                  >
+                    <Delete />
                   </IconButton>
                 </>
               }
@@ -162,20 +176,37 @@ export const EditForm: React.FC = () => {
         onSave={updateFormField}
       />
 
+      <ImportFormModal
+        open={openImportModal}
+        onClose={() => setOpenImportModal(false)}
+        onImport={({ message, severity }) => {
+          setOpenModal(true);
+          setToastMessage({
+            message,
+            severity,
+          });
+        }}
+      />
+
       <Divider sx={{ my: 2 }} />
-      <Button
-        variant="contained"
-        disabled={!title || fields.length === 0}
-        onClick={handleFormSave}
-      >
-        Save Form
-      </Button>
+      <Box sx={{ display: "flex", gap: ".5em" }}>
+        <Button
+          variant="contained"
+          disabled={!title || fields.length === 0}
+          onClick={handleFormSave}
+        >
+          Save Form
+        </Button>
+        <Button variant="outlined" onClick={() => setOpenImportModal(true)}>
+          Import Form
+        </Button>
+      </Box>
 
       <ToastMessage
         open={openModal}
-        message="The form was successfully saved!"
+        message={toastMessage.message}
         duration={5000}
-        severity="success"
+        severity={toastMessage.severity}
         onClose={handleClose}
       />
     </Box>

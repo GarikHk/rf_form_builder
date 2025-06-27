@@ -35,3 +35,11 @@ export function reorderFormField(
 export function setFormId(state: Form, action: PayloadAction<string>) {
   state._id = action.payload;
 }
+
+export function initForm(state: Form, action: PayloadAction<Form>) {
+  const { _id, title, fields } = action.payload;
+
+  state._id = _id;
+  state.title = title;
+  state.fields = fields;
+}

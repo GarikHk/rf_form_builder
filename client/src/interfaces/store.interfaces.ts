@@ -25,4 +25,5 @@ export interface UseForm {
   removeFormField: (payload: string) => void;
   reorderFormField: (payload: ReloadPayload) => void;
   setFormId: (payload: string) => void;
+  initForm: (payload: Form) => void;
 }

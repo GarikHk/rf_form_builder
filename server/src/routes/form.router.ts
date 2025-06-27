@@ -34,12 +34,38 @@ formRoutes.post("/save", async (req, res) => {
   }
 });
 
+formRoutes.get("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+    setStatusWithMessage(res, 400, "Invalid ID format");
+    return;
+  }
+
+  try {
+    const form = await FormModel.findById(id);
+
+    if (!form) {
+      setStatusWithMessage(res, 404, "Form not found");
+      return;
+    }
+
+    res.json({
+      message: "Form fetched successfully",
+      form,
+    });
+  } catch (error) {
+    console.error("Error fetching form:", error);
+    setStatusWithMessage(res, 500, "Failed to fetch form");
+  }
+});
+
 function setStatusWithMessage(
   res: Response,
   code: number,
   message: string
 ): Response {
-  return res.status(code).send(message);
+  return res.status(code).json({ message });
 }
 
 export default formRoutes;

@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { Form } from "../interfaces";
 import {
   addFormField,
+  initForm,
   removeFormField,
   reorderFormField,
   setFormId,
@@ -25,6 +26,7 @@ export const formSlice = createSlice({
     removeField: removeFormField,
     reorderField: reorderFormField,
     setId: setFormId,
+    setForm: initForm,
   },
 });
 
@@ -35,4 +37,5 @@ export const {
   removeField,
   reorderField,
   setId,
+  setForm
 } = formSlice.actions;
