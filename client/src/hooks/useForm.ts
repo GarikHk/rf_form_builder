@@ -15,6 +15,9 @@ import {
 } from "../store/form.slice";
 import { useCallback } from "react";
 
+/**
+ * @desc Hook to interact with the form store.
+ */
 export function useForm(): UseForm {
   const dispatch = useDispatch();
   const id = useSelector((state: FormState) => state.form._id);
